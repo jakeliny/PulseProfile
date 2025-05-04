@@ -9,7 +9,7 @@ const OpenAIClient = new OpenAI({
 
 export async function getOpenAIResponse(url: string): Promise<CompanyProfile> {
 	const prompt = `
-    Based on the content of this website ${url}, return a JSON with the following structure:
+    Based on the content of this website ${url}, return a JSON with the following structure always in english:
         {
           "company_name": ___,
           "service_line": ___,
