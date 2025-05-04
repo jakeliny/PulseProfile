@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { getOpenAIResponse } from "@/api/openai";
 import { CompanyProfile } from "@/interfaces/company";
-
+import Image from "next/image";
 const LOCAL_STORAGE_KEY = "company_profiles";
 
 export function Header({
@@ -57,10 +57,14 @@ export function Header({
 	};
 
 	return (
-		<header className="flex flex-col w-full justify-center gap-2 h-50 items-center">
-			<h1 className="text-2xl text-center text-gold font-bold mb-4">
-				Pulse Profile
-			</h1>
+		<header className="flex flex-col w-full justify-center gap-2 items-center py-20">
+			<Image
+				src="/logo.png"
+				alt="Pulse Profile"
+				width={100}
+				height={100}
+				className="w-1/4 mb-8"
+			/>
 			<form
 				onSubmit={handleSubmit}
 				className="flex w-full gap-2 flex-col sm:flex-row"
