@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { getOpenAIResponse } from "@/api/openai";
@@ -21,6 +21,7 @@ export function Header({
 	isLoading: boolean;
 }) {
 	const [error, setError] = useState<string>("");
+	const formRef = useRef<HTMLFormElement>(null);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -50,6 +51,7 @@ export function Header({
 				);
 				return updatedProfiles;
 			});
+			formRef.current?.reset();
 		} catch {
 			setError("Failed to fetch company data. Please try again.");
 		} finally {
@@ -68,6 +70,7 @@ export function Header({
 				priority
 			/>
 			<form
+				ref={formRef}
 				onSubmit={handleSubmit}
 				className="flex w-full gap-2 flex-col sm:flex-row"
 			>
