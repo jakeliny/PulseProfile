@@ -38,7 +38,7 @@ export function CompanyCard({
 	);
 
 	return (
-		<Card>
+		<Card id={company.url}>
 			<CardHeader>
 				<CardTitle className="text-gold text-2xl font-bold flex justify-between">
 					<TextEditable

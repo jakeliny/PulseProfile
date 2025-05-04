@@ -4,6 +4,7 @@ import { Input } from "../ui/input";
 import { getOpenAIResponse } from "@/api/openai";
 import { CompanyProfile } from "@/interfaces/company";
 import Image from "next/image";
+import { CompaniesList } from "../companies-list";
 const LOCAL_STORAGE_KEY = "company_profiles";
 
 export function Header({
@@ -83,6 +84,8 @@ export function Header({
 				</Button>
 			</form>
 			{error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
+			<CompaniesList companies={companies} />
 		</header>
 	);
 }
