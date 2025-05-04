@@ -6,7 +6,7 @@ const OpenAIClient = new OpenAI({
 	apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
-const mockResponse = {
+const mockResponse: OpenAIResponse = {
 	company_name: "Suzano S.A.",
 	service_line: "Pulp, Paper, and Bioproducts Manufacturing",
 	company_description:
@@ -31,7 +31,17 @@ const mockResponse = {
 	],
 };
 
-export async function getOpenAIResponseReal(url: string) {
+export interface OpenAIResponse {
+	company_name: string;
+	service_line: string;
+	company_description: string;
+	tier1_keywords: string[];
+	tier2_keywords: string[];
+}
+
+export async function getOpenAIResponseReal(
+	url: string
+): Promise<OpenAIResponse> {
 	const prompt = `
     Based on the content of this website ${url}, return a JSON with the following structure:
         {
@@ -62,6 +72,7 @@ export async function getOpenAIResponseReal(url: string) {
 	return JSON.parse(response.choices[0].message.content || "");
 }
 
-export async function getOpenAIResponse(url: string) {
+export async function getOpenAIResponse(url: string): Promise<OpenAIResponse> {
+	console.log(url);
 	return mockResponse;
 }

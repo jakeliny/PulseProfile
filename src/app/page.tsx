@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import { getOpenAIResponse } from "@/api/openai";
+import { getOpenAIResponse, OpenAIResponse } from "@/api/openai";
 
 export default function Home() {
-	const [response, setResponse] = useState<any>(null);
+	const [response, setResponse] = useState<OpenAIResponse | null>(null);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -24,8 +24,8 @@ export default function Home() {
 						<p>{response.company_name}</p>
 						<p>{response.service_line}</p>
 						<p>{response.company_description}</p>
-						<p>{response.tier1_keywords}</p>
-						<p>{response.tier2_keywords}</p>
+						<p>{response.tier1_keywords.join(", ")}</p>
+						<p>{response.tier2_keywords.join(", ")}</p>
 					</>
 				)}
 			</div>
