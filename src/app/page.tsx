@@ -8,18 +8,18 @@ import { CompanyCardSkeleton } from "@/components/skeleton/company-card-skeleton
 const LOCAL_STORAGE_KEY = "company_profiles";
 
 export default function Home() {
-	const [response, setResponse] = useState<CompanyProfile[]>([]);
+	const [companies, setCompanies] = useState<CompanyProfile[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		const savedProfiles = localStorage.getItem(LOCAL_STORAGE_KEY);
 		if (savedProfiles) {
-			setResponse(JSON.parse(savedProfiles));
+			setCompanies(JSON.parse(savedProfiles));
 		}
 	}, []);
 
 	const handleRemoveCompany = (companyUrl: string) => {
-		setResponse((old) => {
+		setCompanies((old) => {
 			const filteredProfiles = old.filter(
 				(company) => company.url !== companyUrl
 			);
@@ -32,7 +32,7 @@ export default function Home() {
 		companyUrl: string,
 		updates: Partial<CompanyProfile>
 	) => {
-		setResponse((old) => {
+		setCompanies((old) => {
 			const updatedProfiles = old.map((company) => {
 				if (company.url === companyUrl) {
 					return { ...company, ...updates };
@@ -47,14 +47,14 @@ export default function Home() {
 	return (
 		<div className="flex w-[80%] flex-col gap-8">
 			<Header
-				setResponse={setResponse}
-				response={response}
+				setCompanies={setCompanies}
+				companies={companies}
 				setIsLoading={setIsLoading}
 				isLoading={isLoading}
 			/>
 			{isLoading && <CompanyCardSkeleton />}
-			{response.length > 0 &&
-				response.map((company) => (
+			{companies.length > 0 &&
+				companies.map((company) => (
 					<CompanyCard
 						key={company.url}
 						company={company}

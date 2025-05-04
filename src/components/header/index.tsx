@@ -7,14 +7,14 @@ import Image from "next/image";
 const LOCAL_STORAGE_KEY = "company_profiles";
 
 export function Header({
-	response,
-	setResponse,
+	companies,
+	setCompanies,
 	setIsLoading,
 	isLoading,
 }: {
-	response: CompanyProfile[];
-	setResponse: (
-		response: CompanyProfile[] | ((old: CompanyProfile[]) => CompanyProfile[])
+	companies: CompanyProfile[];
+	setCompanies: (
+		companies: CompanyProfile[] | ((old: CompanyProfile[]) => CompanyProfile[])
 	) => void;
 	setIsLoading: (isLoading: boolean) => void;
 	isLoading: boolean;
@@ -30,7 +30,7 @@ export function Header({
 			return;
 		}
 
-		const urlExists = response.some((company) => company.url === url);
+		const urlExists = companies.some((company) => company.url === url);
 		if (urlExists) {
 			setError("This company has already been added");
 			return;
@@ -41,7 +41,7 @@ export function Header({
 
 		try {
 			const newResponse = await getOpenAIResponse(url);
-			setResponse((old) => {
+			setCompanies((old) => {
 				const updatedProfiles = [newResponse, ...old];
 				localStorage.setItem(
 					LOCAL_STORAGE_KEY,
