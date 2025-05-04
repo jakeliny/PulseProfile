@@ -25,6 +25,10 @@ export function CompanyCard({
 }) {
 	const [email, setEmail] = useState(company.email || "");
 	const [poc, setPoc] = useState(company.poc || "");
+	const [companyName, setCompanyName] = useState(company.company_name || "");
+	const [companyDescription, setCompanyDescription] = useState(
+		company.company_description || ""
+	);
 	const [serviceLine, setServiceLine] = useState(company.service_line || "");
 	const [tier1Keywords, setTier1Keywords] = useState(
 		company.tier1_keywords.join(", ") || ""
@@ -37,7 +41,14 @@ export function CompanyCard({
 		<Card>
 			<CardHeader>
 				<CardTitle className="text-gold text-2xl font-bold flex justify-between">
-					{company.company_name}
+					<TextEditable
+						text={companyName}
+						setText={(text) => {
+							setCompanyName(text);
+							onUpdateCompany(company.url, { company_name: text });
+						}}
+						type="text"
+					/>
 					<span
 						className="text-red-500 cursor-pointer text-sm"
 						onClick={() => onRemoveCompany(company.url)}
@@ -45,7 +56,16 @@ export function CompanyCard({
 						Remove
 					</span>
 				</CardTitle>
-				<CardDescription>{company.company_description}</CardDescription>
+				<CardDescription>
+					<TextEditable
+						text={companyDescription}
+						type="textarea"
+						setText={(text) => {
+							setCompanyDescription(text);
+							onUpdateCompany(company.url, { company_description: text });
+						}}
+					/>
+				</CardDescription>
 			</CardHeader>
 			<CardContent className="flex flex-col gap-2">
 				<div className="flex flex-col gap-2">

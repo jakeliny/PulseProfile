@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 export function TextEditable({
 	text,
@@ -10,8 +11,8 @@ export function TextEditable({
 }: {
 	text: string;
 	setText: (text: string) => void;
-	label: string;
-	type: "email" | "text";
+	label?: string;
+	type: "email" | "text" | "textarea";
 }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [error, setError] = useState("");
@@ -43,7 +44,9 @@ export function TextEditable({
 		setError("");
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+	const handleKeyDown = (
+		e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
 		if (e.key === "Enter") {
 			e.preventDefault();
 			handleTextBlur();
@@ -53,20 +56,34 @@ export function TextEditable({
 	return (
 		<div className="flex flex-col gap-2">
 			<div className="flex flex-row items-center gap-2">
-				<p className="text-gold font-bold text-sm">{label}:</p>
+				{label && <p className="text-gold font-bold text-sm">{label}:</p>}
 				{isEditing ? (
-					<Input
-						type={type}
-						value={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
-						onBlur={handleTextBlur}
-						onKeyDown={handleKeyDown}
-						className={cn(
-							"w-1/2 outline-none",
-							error && "border-red-500 focus-visible:ring-red-500"
-						)}
-						autoFocus
-					/>
+					type === "textarea" ? (
+						<Textarea
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							onBlur={handleTextBlur}
+							onKeyDown={handleKeyDown}
+							className={cn(
+								"w-full outline-none",
+								error && "border-red-500 focus-visible:ring-red-500"
+							)}
+							autoFocus
+						/>
+					) : (
+						<Input
+							type={type}
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							onBlur={handleTextBlur}
+							onKeyDown={handleKeyDown}
+							className={cn(
+								"w-full outline-none",
+								error && "border-red-500 focus-visible:ring-red-500"
+							)}
+							autoFocus
+						/>
+					)
 				) : (
 					<p
 						onClick={handleTextClick}
