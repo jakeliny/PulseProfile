@@ -11,7 +11,18 @@ import { Separator } from "../ui/separator";
 import { useState } from "react";
 import { TextEditable } from "../text-editable";
 
-export function CompanyCard({ company }: { company: CompanyProfile }) {
+export function CompanyCard({
+	company,
+	onRemoveCompany,
+	onUpdateCompany,
+}: {
+	company: CompanyProfile;
+	onRemoveCompany: (companyUrl: string) => void;
+	onUpdateCompany: (
+		companyUrl: string,
+		updates: Partial<CompanyProfile>
+	) => void;
+}) {
 	const [email, setEmail] = useState(company.email || "");
 	const [poc, setPoc] = useState(company.poc || "");
 	const [serviceLine, setServiceLine] = useState(company.service_line || "");
@@ -25,8 +36,14 @@ export function CompanyCard({ company }: { company: CompanyProfile }) {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className="text-gold text-2xl font-bold">
+				<CardTitle className="text-gold text-2xl font-bold flex justify-between">
 					{company.company_name}
+					<span
+						className="text-red-500 cursor-pointer text-sm"
+						onClick={() => onRemoveCompany(company.url)}
+					>
+						Remove
+					</span>
 				</CardTitle>
 				<CardDescription>{company.company_description}</CardDescription>
 			</CardHeader>
@@ -35,25 +52,58 @@ export function CompanyCard({ company }: { company: CompanyProfile }) {
 					<TextEditable
 						label="Email"
 						text={email}
-						setText={setEmail}
+						setText={(text) => {
+							setEmail(text);
+							onUpdateCompany(company.url, { email: text });
+						}}
 						type="email"
 					/>
-					<TextEditable label="POC" text={poc} setText={setPoc} type="text" />
+					<TextEditable
+						label="POC"
+						text={poc}
+						setText={(text) => {
+							setPoc(text);
+							onUpdateCompany(company.url, { poc: text });
+						}}
+						type="text"
+					/>
 				</div>
 			</CardContent>
 			<Separator className="my-4" />
 			<CardContent className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
 					<p className="text-gold font-bold text-sm">Services:</p>
-					<TagsArea tags={serviceLine} setTags={setServiceLine} />
+					<TagsArea
+						tags={serviceLine}
+						setTags={(text) => {
+							setServiceLine(text);
+							onUpdateCompany(company.url, { service_line: text });
+						}}
+					/>
 				</div>
 				<div className="flex flex-col gap-2">
 					<p className="text-gold font-bold text-sm">Tier 1 Keywords:</p>
-					<TagsArea tags={tier1Keywords} setTags={setTier1Keywords} />
+					<TagsArea
+						tags={tier1Keywords}
+						setTags={(text) => {
+							setTier1Keywords(text);
+							onUpdateCompany(company.url, {
+								tier1_keywords: text.split(", "),
+							});
+						}}
+					/>
 				</div>
 				<div className="flex flex-col gap-2">
 					<p className="text-gold font-bold text-sm">Tier 2 Keywords:</p>
-					<TagsArea tags={tier2Keywords} setTags={setTier2Keywords} />
+					<TagsArea
+						tags={tier2Keywords}
+						setTags={(text) => {
+							setTier2Keywords(text);
+							onUpdateCompany(company.url, {
+								tier2_keywords: text.split(", "),
+							});
+						}}
+					/>
 				</div>
 			</CardContent>
 		</Card>

@@ -6,4 +6,5 @@ export interface CompanyProfile {
 	tier2_keywords: string[];
 	email?: string;
 	poc?: string;
+	url: string;
 }

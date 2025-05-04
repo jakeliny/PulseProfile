@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function TextEditable({
 	text,
@@ -15,6 +15,11 @@ export function TextEditable({
 }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [error, setError] = useState("");
+	const [inputValue, setInputValue] = useState(text);
+
+	useEffect(() => {
+		setInputValue(text);
+	}, [text]);
 
 	const validateEmail = (email: string) => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,12 +27,13 @@ export function TextEditable({
 	};
 
 	const handleTextBlur = () => {
-		if (text) {
-			if (type === "email" && !validateEmail(text)) {
+		if (inputValue) {
+			if (type === "email" && !validateEmail(inputValue)) {
 				setError("This field only accept a valid email");
 				return;
 			}
 			setError("");
+			setText(inputValue);
 		}
 		setIsEditing(false);
 	};
@@ -51,8 +57,8 @@ export function TextEditable({
 				{isEditing ? (
 					<Input
 						type={type}
-						value={text}
-						onChange={(e) => setText(e.target.value)}
+						value={inputValue}
+						onChange={(e) => setInputValue(e.target.value)}
 						onBlur={handleTextBlur}
 						onKeyDown={handleKeyDown}
 						className={cn(

@@ -8,6 +8,7 @@ const OpenAIClient = new OpenAI({
 });
 
 const mockResponse: CompanyProfile = {
+	url: "https://www.suzano.com.br/",
 	company_name: "Suzano S.A.",
 	service_line: "Pulp, Paper, and Bioproducts Manufacturing",
 	company_description:
@@ -66,6 +67,9 @@ export async function getOpenAIResponseReal(
 }
 
 export async function getOpenAIResponse(url: string): Promise<CompanyProfile> {
-	console.log(url);
-	return mockResponse;
+	return {
+		...mockResponse,
+		company_name: mockResponse.company_name + " - " + url,
+		url: url,
+	};
 }
