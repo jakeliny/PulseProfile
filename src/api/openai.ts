@@ -1,12 +1,13 @@
 "use server";
 
+import { CompanyProfile } from "@/interfaces/company";
 import OpenAI from "openai";
 
 const OpenAIClient = new OpenAI({
 	apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
-const mockResponse: OpenAIResponse = {
+const mockResponse: CompanyProfile = {
 	company_name: "Suzano S.A.",
 	service_line: "Pulp, Paper, and Bioproducts Manufacturing",
 	company_description:
@@ -31,17 +32,9 @@ const mockResponse: OpenAIResponse = {
 	],
 };
 
-export interface OpenAIResponse {
-	company_name: string;
-	service_line: string;
-	company_description: string;
-	tier1_keywords: string[];
-	tier2_keywords: string[];
-}
-
 export async function getOpenAIResponseReal(
 	url: string
-): Promise<OpenAIResponse> {
+): Promise<CompanyProfile> {
 	const prompt = `
     Based on the content of this website ${url}, return a JSON with the following structure:
         {
@@ -72,7 +65,7 @@ export async function getOpenAIResponseReal(
 	return JSON.parse(response.choices[0].message.content || "");
 }
 
-export async function getOpenAIResponse(url: string): Promise<OpenAIResponse> {
+export async function getOpenAIResponse(url: string): Promise<CompanyProfile> {
 	console.log(url);
 	return mockResponse;
 }
