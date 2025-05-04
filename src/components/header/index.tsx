@@ -64,7 +64,7 @@ export function Header({
 				alt="Pulse Profile"
 				width={100}
 				height={100}
-				className="w-1/4 mb-8"
+				className="w-full mb-8 md:w-2/3 lg:w-1/2"
 				priority
 			/>
 			<form

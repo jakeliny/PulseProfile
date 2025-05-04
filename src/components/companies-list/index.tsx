@@ -1,7 +1,7 @@
 import { CompanyProfile } from "@/interfaces/company";
 export function CompaniesList({ companies }: { companies: CompanyProfile[] }) {
 	return (
-		<div className="flex gap-2">
+		<div className="flex gap-2 flex-wrap">
 			{companies.map((company, index) => (
 				<div key={company.url} className="flex gap-2 items-center">
 					<a
