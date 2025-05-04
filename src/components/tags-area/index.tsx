@@ -54,7 +54,9 @@ export function TagsArea({
 								key={tag}
 								className="p-2 rounded-md bg-zinc-300 flex flex-row items-center gap-2 justify-between"
 							>
-								<span className="text-gold-dark font-bold text-sm">{tag}</span>
+								<span className="text-gold-dark font-bold text-sm flex break-all whitespace-normal">
+									{tag}
+								</span>
 								<button
 									onClick={() => handleRemoveTag(tag)}
 									className="text-gold-dark font-bold text-sm hover:text-red-500 cursor-pointer"
