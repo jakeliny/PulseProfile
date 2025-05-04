@@ -1,42 +1,59 @@
 "use client";
-import { useState } from "react";
-import { getOpenAIResponse } from "@/api/openai";
+import { useState, useEffect } from "react";
 import { CompanyCard } from "@/components/company-card";
-import { Button } from "@/components/ui/button";
-import { CompanyCardSkeleton } from "@/components/skeleton/company-card-skeleton";
 import { CompanyProfile } from "@/interfaces/company";
-import { Input } from "@/components/ui/input";
-export default function Home() {
-	const [response, setResponse] = useState<CompanyProfile | null>(null);
+import { Header } from "@/components/header";
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		const url = (e.target as HTMLFormElement).url.value;
-		const response = await getOpenAIResponse(url);
-		setResponse(response);
+const LOCAL_STORAGE_KEY = "company_profiles";
+
+export default function Home() {
+	const [response, setResponse] = useState<CompanyProfile[]>([]);
+
+	useEffect(() => {
+		const savedProfiles = localStorage.getItem(LOCAL_STORAGE_KEY);
+		if (savedProfiles) {
+			setResponse(JSON.parse(savedProfiles));
+		}
+	}, []);
+
+	const handleRemoveCompany = (companyUrl: string) => {
+		setResponse((old) => {
+			const filteredProfiles = old.filter(
+				(company) => company.url !== companyUrl
+			);
+			localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(filteredProfiles));
+			return filteredProfiles;
+		});
 	};
+
+	const handleUpdateCompany = (
+		companyUrl: string,
+		updates: Partial<CompanyProfile>
+	) => {
+		setResponse((old) => {
+			const updatedProfiles = old.map((company) => {
+				if (company.url === companyUrl) {
+					return { ...company, ...updates };
+				}
+				return company;
+			});
+			localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedProfiles));
+			return updatedProfiles;
+		});
+	};
+
 	return (
-		<div className="flex w-[80%] flex-col">
-			<div className="flex flex-col w-full justify-center gap-2 h-50 items-center">
-				<h1 className="text-2xl text-center text-gold font-bold mb-4">
-					Pulse Profile
-				</h1>
-				<form
-					onSubmit={handleSubmit}
-					className="flex w-full gap-2 flex-col sm:flex-row"
-				>
-					<Input
-						type="text"
-						name="url"
-						placeholder="Enter a URL"
-						className="w-full h-10 rounded-md border-2 border-gold-dark  p-2 text-gold-dark outline-none"
+		<div className="flex w-[80%] flex-col gap-8">
+			<Header setResponse={setResponse} response={response} />
+			{response.length > 0 &&
+				response.map((company) => (
+					<CompanyCard
+						key={company.url}
+						company={company}
+						onRemoveCompany={handleRemoveCompany}
+						onUpdateCompany={handleUpdateCompany}
 					/>
-					<Button type="submit" variant="gold">
-						Submit
-					</Button>
-				</form>
-			</div>
-			{response ? <CompanyCard company={response} /> : <CompanyCardSkeleton />}
+				))}
 		</div>
 	);
 }
