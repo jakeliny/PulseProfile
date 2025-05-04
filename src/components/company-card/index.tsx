@@ -14,6 +14,13 @@ import { TextEditable } from "../text-editable";
 export function CompanyCard({ company }: { company: CompanyProfile }) {
 	const [email, setEmail] = useState(company.email || "");
 	const [poc, setPoc] = useState(company.poc || "");
+	const [serviceLine, setServiceLine] = useState(company.service_line || "");
+	const [tier1Keywords, setTier1Keywords] = useState(
+		company.tier1_keywords.join(", ") || ""
+	);
+	const [tier2Keywords, setTier2Keywords] = useState(
+		company.tier2_keywords.join(", ") || ""
+	);
 
 	return (
 		<Card>
@@ -38,15 +45,15 @@ export function CompanyCard({ company }: { company: CompanyProfile }) {
 			<CardContent className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
 					<p className="text-gold font-bold text-sm">Services:</p>
-					<TagsArea tags={company.service_line} />
+					<TagsArea tags={serviceLine} setTags={setServiceLine} />
 				</div>
 				<div className="flex flex-col gap-2">
 					<p className="text-gold font-bold text-sm">Tier 1 Keywords:</p>
-					<TagsArea tags={company.tier1_keywords.join(", ")} />
+					<TagsArea tags={tier1Keywords} setTags={setTier1Keywords} />
 				</div>
 				<div className="flex flex-col gap-2">
 					<p className="text-gold font-bold text-sm">Tier 2 Keywords:</p>
-					<TagsArea tags={company.tier2_keywords.join(", ")} />
+					<TagsArea tags={tier2Keywords} setTags={setTier2Keywords} />
 				</div>
 			</CardContent>
 		</Card>
