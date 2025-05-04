@@ -9,17 +9,26 @@ const LOCAL_STORAGE_KEY = "company_profiles";
 export function Header({
 	response,
 	setResponse,
+	setIsLoading,
+	isLoading,
 }: {
 	response: CompanyProfile[];
 	setResponse: (
 		response: CompanyProfile[] | ((old: CompanyProfile[]) => CompanyProfile[])
 	) => void;
+	setIsLoading: (isLoading: boolean) => void;
+	isLoading: boolean;
 }) {
 	const [error, setError] = useState<string>("");
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const url = (e.target as HTMLFormElement).url.value;
+
+		if (!url) {
+			setError("Please enter a valid URL");
+			return;
+		}
 
 		const urlExists = response.some((company) => company.url === url);
 		if (urlExists) {
@@ -28,13 +37,23 @@ export function Header({
 		}
 
 		setError("");
-		const newResponse = await getOpenAIResponse(url);
+		setIsLoading(true);
 
-		setResponse((old) => {
-			const updatedProfiles = [newResponse, ...old];
-			localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedProfiles));
-			return updatedProfiles;
-		});
+		try {
+			const newResponse = await getOpenAIResponse(url);
+			setResponse((old) => {
+				const updatedProfiles = [newResponse, ...old];
+				localStorage.setItem(
+					LOCAL_STORAGE_KEY,
+					JSON.stringify(updatedProfiles)
+				);
+				return updatedProfiles;
+			});
+		} catch {
+			setError("Failed to fetch company data. Please try again.");
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -50,12 +69,13 @@ export function Header({
 					type="text"
 					name="url"
 					placeholder="Enter a URL"
-					className={`w-full h-10 rounded-md border-2 p-2 outline-none ${
+					className={`w-full h-10 rounded-md border-2 p-2 outline-none text-gold ${
 						error ? "border-red-500" : "border-gold-dark"
-					} ${error ? "text-red-500" : "text-gold-dark"}`}
+					}`}
+					disabled={isLoading}
 				/>
-				<Button type="submit" variant="gold">
-					Submit
+				<Button type="submit" variant="gold" disabled={isLoading}>
+					{isLoading ? "Loading..." : "Submit"}
 				</Button>
 			</form>
 			{error && <p className="text-red-500 text-sm mt-1">{error}</p>}
