@@ -1,4 +1,4 @@
-# Company Profile Manager
+![logo](https://github.com/user-attachments/assets/5a0504e0-4475-4ce9-861e-ff1e8ab1db5a)
 
 A modern web application built with Next.js for managing and tracking company profiles, powered by GPT-4.1 for intelligent analysis and suggestions.
 
